@@ -28,6 +28,12 @@ final class CaddyOverlayView: UIView {
     private var keyButtons: [CaddyKeyButton] = []
     private var panelRows: [[(view: CaddyKeyButton, span: Int)]] = []
 
+    // Aim fade: while an aim button is held the panel goes nearly transparent.
+    private var activeFaders = Set<ObjectIdentifier>()
+    private var fadeRestore: DispatchWorkItem?
+    private var isFaded = false
+    private let fadeRestoreDelay: TimeInterval = 0.4   // bridges quick successive taps
+
     private let config: CaddyConfig
     private var isPanelOpen = false { didSet { updateTriggerAppearance() } }
 
@@ -195,6 +201,9 @@ final class CaddyOverlayView: UIView {
         panelRows = config.panelRows.map { row in
             row.map { cell in
                 let kb = CaddyKeyButton(button: cell.button)
+                if cell.button.fadesPanel {
+                    kb.onPressChanged = { [weak self] b, pressing in self?.faderChanged(b, pressing: pressing) }
+                }
                 keyButtons.append(kb)
                 panel.addSubview(kb)
                 return (kb, cell.span)
@@ -216,8 +225,42 @@ final class CaddyOverlayView: UIView {
             }
         } else {
             keyButtons.forEach { $0.cancelActivePress() }
+            fadeRestore?.cancel()
+            activeFaders.removeAll()
+            if isFaded { applyFade(false) }
             UIView.animate(withDuration: 0.12, animations: { self.panel.alpha = 0 }) { _ in
                 if !self.isPanelOpen { self.panel.isHidden = true }
+            }
+        }
+    }
+
+    private func faderChanged(_ b: CaddyKeyButton, pressing: Bool) {
+        if pressing {
+            activeFaders.insert(ObjectIdentifier(b))
+            fadeRestore?.cancel()
+            fadeRestore = nil
+            applyFade(true)
+        } else {
+            activeFaders.remove(ObjectIdentifier(b))
+            guard activeFaders.isEmpty else { applyFade(true); return }
+            let work = DispatchWorkItem { [weak self] in
+                guard let self = self, self.activeFaders.isEmpty else { return }
+                self.applyFade(false)
+            }
+            fadeRestore = work
+            DispatchQueue.main.asyncAfter(deadline: .now() + fadeRestoreDelay, execute: work)
+        }
+    }
+
+    private func applyFade(_ faded: Bool) {
+        isFaded = faded
+        UIView.animate(withDuration: faded ? 0.15 : 0.25, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction]) {
+            self.panel.backgroundColor = faded ? CaddyTheme.panelBackground.withAlphaComponent(0.1) : CaddyTheme.panelBackground
+            self.panel.layer.borderColor = UIColor(white: 1, alpha: faded ? 0.04 : 0.12).cgColor
+            self.trigger.alpha = faded ? 0.15 : (self.isPanelOpen ? 1.0 : self.idleAlpha)
+            for kb in self.keyButtons {
+                let active = self.activeFaders.contains(ObjectIdentifier(kb))
+                kb.alpha = kb.baseAlpha * (faded ? (active ? 0.5 : 0.12) : 1.0)
             }
         }
     }
@@ -284,6 +327,10 @@ final class CaddyKeyButton: UIControl {
     private let stack = UIStackView()
     private var repeatTimer: Timer?
     private var holding = false
+    private var pressing = false
+    /// Called with true on touch down and false on release, for buttons that fade the panel.
+    var onPressChanged: ((CaddyKeyButton, Bool) -> Void)?
+    private(set) var baseAlpha: CGFloat = 1
 
     private let repeatDelay: TimeInterval = 0.35
     private let repeatInterval: TimeInterval = 0.12
@@ -296,7 +343,8 @@ final class CaddyKeyButton: UIControl {
         layer.borderWidth = 1
         layer.borderColor = (button.practiceOnly ? UIColor.systemOrange : CaddyTheme.keyBorder).cgColor
         isEnabled = button.virtualKey != nil
-        alpha = isEnabled ? 1 : 0.35
+        baseAlpha = isEnabled ? 1 : 0.35
+        alpha = baseAlpha
         accessibilityLabel = button.label
         isAccessibilityElement = true
         accessibilityTraits = .button
@@ -356,6 +404,8 @@ final class CaddyKeyButton: UIControl {
 
     @objc private func touchDown() {
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        pressing = true
+        onPressChanged?(self, true)
         if button.hold {
             holding = true
             CaddyKeySender.shared.keyDown(button)
@@ -378,6 +428,10 @@ final class CaddyKeyButton: UIControl {
     func cancelActivePress() {
         repeatTimer?.invalidate()
         repeatTimer = nil
+        if pressing {
+            pressing = false
+            onPressChanged?(self, false)
+        }
         if holding {
             holding = false
             CaddyKeySender.shared.keyUp(button)

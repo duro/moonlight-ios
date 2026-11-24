@@ -16,9 +16,11 @@ struct CaddyButton: Decodable {
     let practiceOnly: Bool
     /// How the button face is drawn: icon, text, textIcon (text then icon) or iconText.
     let display: String
+    /// While held, fade the panel so the course behind it stays visible (aim buttons).
+    let fadesPanel: Bool
 
     enum CodingKeys: String, CodingKey {
-        case id, label, symbol, key, modifiers, hold, practiceOnly, display
+        case id, label, symbol, key, modifiers, hold, practiceOnly, display, fadesPanel
         case repeats = "repeat"
     }
 
@@ -33,6 +35,7 @@ struct CaddyButton: Decodable {
         hold = try c.decodeIfPresent(Bool.self, forKey: .hold) ?? false
         practiceOnly = try c.decodeIfPresent(Bool.self, forKey: .practiceOnly) ?? false
         display = try c.decodeIfPresent(String.self, forKey: .display) ?? "text"
+        fadesPanel = try c.decodeIfPresent(Bool.self, forKey: .fadesPanel) ?? false
     }
 
     /// Windows virtual-key code, or nil if the key name is unknown / "TBD" (button renders disabled).
