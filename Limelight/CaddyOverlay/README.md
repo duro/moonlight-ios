@@ -1,4 +1,4 @@
-# GSPro Caddy overlay
+# GSPro Control overlay (GSPro Caddy)
 
 A floating, draggable button over the stream that opens a TouchCaddy-style panel of GSPro
 keyboard shortcuts. Keys go to the host through `LiSendKeyboardEvent`, the same path
@@ -14,4 +14,4 @@ Upstream touch points, kept small for easy merges:
 - `StreamFrameViewController.m`: creates the overlay in `viewDidLoad`, shows it in `connectionStarted`.
 - `Moonlight-Bridging-Header.h`: imports `<Limelight.h>`.
 - `project.pbxproj`: adds this group to the iOS target; iOS bundle id `com.duroworx.gsprocaddy`, team `B9AH7Q59QL`.
-- `Limelight-Info.plist`: display name "GSPro Caddy" so it sits beside stock Moonlight.
+- `Limelight-Info.plist`: display name "GSPro Control" so it sits beside stock Moonlight.

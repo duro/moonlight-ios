@@ -34,6 +34,11 @@ final class CaddyOverlayView: UIView {
     private var isFaded = false
     private let fadeRestoreDelay: TimeInterval = 0.4   // bridges quick successive taps
 
+    // Auto-hide: close the panel after this long with no interaction.
+    private let autoHideDelay: TimeInterval = 8
+    private var autoHideTimer: Timer?
+    private var heldButtons = Set<ObjectIdentifier>()
+
     private let config: CaddyConfig
     private var isPanelOpen = false { didSet { updateTriggerAppearance() } }
 
@@ -118,6 +123,7 @@ final class CaddyOverlayView: UIView {
     @objc private func triggerPanned(_ g: UIPanGestureRecognizer) {
         switch g.state {
         case .began:
+            restartAutoHide()
             trigger.alpha = 1.0
             if isPanelOpen { panel.isHidden = true }
         case .changed:
@@ -201,8 +207,10 @@ final class CaddyOverlayView: UIView {
         panelRows = config.panelRows.map { row in
             row.map { cell in
                 let kb = CaddyKeyButton(button: cell.button)
-                if cell.button.fadesPanel {
-                    kb.onPressChanged = { [weak self] b, pressing in self?.faderChanged(b, pressing: pressing) }
+                kb.onPressChanged = { [weak self] b, pressing in
+                    guard let self = self else { return }
+                    self.keyPressChanged(b, pressing: pressing)
+                    if b.button.fadesPanel { self.faderChanged(b, pressing: pressing) }
                 }
                 keyButtons.append(kb)
                 panel.addSubview(kb)
@@ -214,6 +222,7 @@ final class CaddyOverlayView: UIView {
 
     private func setPanelOpen(_ open: Bool) {
         isPanelOpen = open
+        restartAutoHide()
         if open {
             layoutPanel()
             panel.isHidden = false
@@ -225,12 +234,29 @@ final class CaddyOverlayView: UIView {
             }
         } else {
             keyButtons.forEach { $0.cancelActivePress() }
+            heldButtons.removeAll()
             fadeRestore?.cancel()
             activeFaders.removeAll()
             if isFaded { applyFade(false) }
             UIView.animate(withDuration: 0.12, animations: { self.panel.alpha = 0 }) { _ in
                 if !self.isPanelOpen { self.panel.isHidden = true }
             }
+        }
+    }
+
+    private func keyPressChanged(_ b: CaddyKeyButton, pressing: Bool) {
+        if pressing { heldButtons.insert(ObjectIdentifier(b)) } else { heldButtons.remove(ObjectIdentifier(b)) }
+        restartAutoHide()
+    }
+
+    /// Restart the idle countdown. While a key is held the countdown is paused.
+    private func restartAutoHide() {
+        autoHideTimer?.invalidate()
+        autoHideTimer = nil
+        guard isPanelOpen, heldButtons.isEmpty else { return }
+        autoHideTimer = Timer.scheduledTimer(withTimeInterval: autoHideDelay, repeats: false) { [weak self] _ in
+            guard let self = self, self.isPanelOpen, self.heldButtons.isEmpty else { return }
+            self.setPanelOpen(false)
         }
     }
 
