@@ -89,7 +89,7 @@ final class CaddyOverlayView: UIView {
         trigger.backgroundColor = UIColor(white: 0.1, alpha: 0.85)
         trigger.layer.borderColor = UIColor(white: 1, alpha: 0.6).cgColor
         trigger.layer.borderWidth = 1.5
-        trigger.accessibilityLabel = "GSPro shortcuts"
+        trigger.accessibilityLabel = "Caddie shortcuts"
         trigger.isAccessibilityElement = true
 
         triggerIcon.image = UIImage(systemName: "figure.golf",
