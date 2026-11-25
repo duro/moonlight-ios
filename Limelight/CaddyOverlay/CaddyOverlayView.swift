@@ -429,7 +429,10 @@ final class CaddyKeyButton: UIControl {
         // Text + icon keys (e.g. "Club Up +"): on narrow keys (iPhone) the icon would squeeze the
         // text into fragments, so drop the icon whenever the longest word can't sit beside it.
         if let icon = iconPart, let text = textPart {
-            let font = text.font ?? .systemFont(ofSize: 17, weight: .medium)
+            // Measure at 75% size: the label may shrink a little (minimumScaleFactor) before
+            // the icon has to go. iPad keys (~75 pt) keep the icon; iPhone keys (~55 pt) drop it.
+            let baseFont = text.font ?? .systemFont(ofSize: 17, weight: .medium)
+            let font = baseFont.withSize(baseFont.pointSize * 0.75)
             let longestWord = (text.text ?? "").split(separator: " ")
                 .map { (String($0) as NSString).size(withAttributes: [.font: font]).width }
                 .max() ?? 0
