@@ -136,6 +136,11 @@
 		FBD349621A0089F6002D2A60 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FBD349611A0089F6002D2A60 /* DataManager.m */; };
 		FBDE86E019F7A837001C18A8 /* UIComputerView.m in Sources */ = {isa = PBXBuildFile; fileRef = FBDE86DF19F7A837001C18A8 /* UIComputerView.m */; };
 		FBDE86E619F82297001C18A8 /* UIAppView.m in Sources */ = {isa = PBXBuildFile; fileRef = FBDE86E519F82297001C18A8 /* UIAppView.m */; };
+		CADD00000000000000000003 /* CaddyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD00000000000000000002 /* CaddyConfig.swift */; };
+		CADD00000000000000000005 /* CaddyKeySender.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD00000000000000000004 /* CaddyKeySender.swift */; };
+		CADD00000000000000000007 /* CaddyOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD00000000000000000006 /* CaddyOverlayView.swift */; };
+		CADD00000000000000000009 /* gspro-bindings.json in Resources */ = {isa = PBXBuildFile; fileRef = CADD00000000000000000008 /* gspro-bindings.json */; };
+		CADD00000000000000000102 /* GSProTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD00000000000000000101 /* GSProTheme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -320,6 +325,11 @@
 		FBDE86DF19F7A837001C18A8 /* UIComputerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIComputerView.m; sourceTree = "<group>"; };
 		FBDE86E419F82297001C18A8 /* UIAppView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIAppView.h; sourceTree = "<group>"; };
 		FBDE86E519F82297001C18A8 /* UIAppView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIAppView.m; sourceTree = "<group>"; };
+		CADD00000000000000000002 /* CaddyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaddyConfig.swift; sourceTree = "<group>"; };
+		CADD00000000000000000004 /* CaddyKeySender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaddyKeySender.swift; sourceTree = "<group>"; };
+		CADD00000000000000000006 /* CaddyOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaddyOverlayView.swift; sourceTree = "<group>"; };
+		CADD00000000000000000008 /* gspro-bindings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = gspro-bindings.json; sourceTree = "<group>"; };
+		CADD00000000000000000101 /* GSProTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GSProTheme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -469,6 +479,7 @@
 				FB1D59961BBCCB6400F482CA /* ComputerScrollView.m */,
 				FB1D59981BBCCD7E00F482CA /* AppCollectionView.h */,
 				FB1D59991BBCCD7E00F482CA /* AppCollectionView.m */,
+				CADD00000000000000000001 /* CaddyOverlay */,
 			);
 			name = Moonlight;
 			path = Limelight;
@@ -685,6 +696,18 @@
 			name = Database;
 			sourceTree = "<group>";
 		};
+		CADD00000000000000000001 /* CaddyOverlay */ = {
+			isa = PBXGroup;
+			children = (
+				CADD00000000000000000002 /* CaddyConfig.swift */,
+				CADD00000000000000000004 /* CaddyKeySender.swift */,
+				CADD00000000000000000006 /* CaddyOverlayView.swift */,
+				CADD00000000000000000101 /* GSProTheme.swift */,
+				CADD00000000000000000008 /* gspro-bindings.json */,
+			);
+			path = CaddyOverlay;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -817,6 +840,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CADD00000000000000000009 /* gspro-bindings.json in Resources */,
 				FB290E7919B37D81004C83CF /* iPad.storyboard in Resources */,
 				FB290CFE19B2C406004C83CF /* InfoPlist.strings in Resources */,
 				FB290E7B19B38036004C83CF /* iPhone.storyboard in Resources */,
@@ -885,6 +909,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CADD00000000000000000003 /* CaddyConfig.swift in Sources */,
+				CADD00000000000000000005 /* CaddyKeySender.swift in Sources */,
+				CADD00000000000000000007 /* CaddyOverlayView.swift in Sources */,
+				CADD00000000000000000102 /* GSProTheme.swift in Sources */,
 				FB290D0719B2C406004C83CF /* Limelight.xcdatamodeld in Sources */,
 				9819CC22254F180F008A7C8E /* AbsoluteTouchHandler.m in Sources */,
 				9819CC14254F107A008A7C8E /* RelativeTouchHandler.m in Sources */,
@@ -1235,8 +1263,9 @@
 					"$(PROJECT_DIR)/libs/SDL2/lib/iOS-Sim",
 					"$(PROJECT_DIR)/libs/FFmpeg/lib/iOS-Sim",
 				);
-				MARKETING_VERSION = 9.0.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.moonlight-stream.Moonlight";
+				MARKETING_VERSION = 1.0;
+				DEVELOPMENT_TEAM = B9AH7Q59QL;
+				PRODUCT_BUNDLE_IDENTIFIER = com.duroworx.caddielight;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = NO;
@@ -1285,8 +1314,9 @@
 					"$(PROJECT_DIR)/libs/SDL2/lib/iOS-Sim",
 					"$(PROJECT_DIR)/libs/FFmpeg/lib/iOS-Sim",
 				);
-				MARKETING_VERSION = 9.0.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.moonlight-stream.Moonlight";
+				MARKETING_VERSION = 1.0;
+				DEVELOPMENT_TEAM = B9AH7Q59QL;
+				PRODUCT_BUNDLE_IDENTIFIER = com.duroworx.caddielight;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = NO;

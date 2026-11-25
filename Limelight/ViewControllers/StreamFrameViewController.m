@@ -12,6 +12,9 @@
 #import "StreamManager.h"
 #import "ControllerSupport.h"
 #import "DataManager.h"
+#if !TARGET_OS_TV
+#import "Moonlight-Swift.h" // GSPro Caddy overlay
+#endif
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -44,6 +47,9 @@
     UILabel *_tipLabel;
     UIActivityIndicatorView *_spinner;
     StreamView *_streamView;
+#if !TARGET_OS_TV
+    CaddyOverlayView *_caddyOverlay;
+#endif
     UIScrollView *_scrollView;
     BOOL _userIsInteracting;
     CGSize _keyboardSize;
@@ -209,6 +215,12 @@
     [self.view addSubview:_stageLabel];
     [self.view addSubview:_spinner];
     [self.view addSubview:_tipLabel];
+
+#if !TARGET_OS_TV
+    // GSPro Caddy overlay: floating shortcut panel above the stream
+    _caddyOverlay = [[CaddyOverlayView alloc] initWithFrame:self.view.bounds];
+    [self.view addSubview:_caddyOverlay];
+#endif
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
@@ -376,6 +388,9 @@
         self->_tipLabel.hidden = YES;
         
         [self->_streamView showOnScreenControls];
+#if !TARGET_OS_TV
+        [self->_caddyOverlay show];
+#endif
         
         [self->_controllerSupport connectionEstablished];
         
@@ -404,7 +419,7 @@
         
         if (portTestResults != ML_TEST_RESULT_INCONCLUSIVE && portTestResults != 0) {
             title = @"Connection Error";
-            message = @"Your device's network connection is blocking Moonlight. Streaming may not work while connected to this network.";
+            message = @"Your device's network connection is blocking Caddie Light. Streaming may not work while connected to this network.";
         }
         else {
             switch (errorCode) {
@@ -500,7 +515,7 @@
             message = [message stringByAppendingString:[NSString stringWithFormat:@"\n\nCheck your firewall and port forwarding rules for port(s):\n%s", failingPorts]];
         }
         if (portTestResults != ML_TEST_RESULT_INCONCLUSIVE && portTestResults != 0) {
-            message = [message stringByAppendingString:@"\n\nYour device's network connection is blocking Moonlight. Streaming may not work while connected to this network."];
+            message = [message stringByAppendingString:@"\n\nYour device's network connection is blocking Caddie Light. Streaming may not work while connected to this network."];
         }
         
         UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Connection Failed"
