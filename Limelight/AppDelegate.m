@@ -7,6 +7,9 @@
 //
 
 #import "AppDelegate.h"
+#if !TARGET_OS_TV
+#import "Moonlight-Swift.h" // GSPro theme
+#endif
 
 @implementation AppDelegate
 
@@ -24,6 +27,9 @@ static NSString* DB_NAME = @"Limelight_iOS.sqlite";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 #if !TARGET_OS_TV
+    // GSPro Control: recolor the app to match GSPro's palette
+    [GSProTheme apply];
+    [GSProTheme styleWithWindow:self.window];
     UIApplicationShortcutItem* shortcut = [launchOptions valueForKey:UIApplicationLaunchOptionsShortcutItemKey];
     if (shortcut != nil) {
         _pcUuidToLoad = (NSString*)[shortcut.userInfo objectForKey:@"UUID"];

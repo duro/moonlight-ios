@@ -140,6 +140,7 @@
 		CADD00000000000000000005 /* CaddyKeySender.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD00000000000000000004 /* CaddyKeySender.swift */; };
 		CADD00000000000000000007 /* CaddyOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD00000000000000000006 /* CaddyOverlayView.swift */; };
 		CADD00000000000000000009 /* gspro-bindings.json in Resources */ = {isa = PBXBuildFile; fileRef = CADD00000000000000000008 /* gspro-bindings.json */; };
+		CADD00000000000000000102 /* GSProTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD00000000000000000101 /* GSProTheme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -328,6 +329,7 @@
 		CADD00000000000000000004 /* CaddyKeySender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaddyKeySender.swift; sourceTree = "<group>"; };
 		CADD00000000000000000006 /* CaddyOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaddyOverlayView.swift; sourceTree = "<group>"; };
 		CADD00000000000000000008 /* gspro-bindings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = gspro-bindings.json; sourceTree = "<group>"; };
+		CADD00000000000000000101 /* GSProTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GSProTheme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -700,6 +702,7 @@
 				CADD00000000000000000002 /* CaddyConfig.swift */,
 				CADD00000000000000000004 /* CaddyKeySender.swift */,
 				CADD00000000000000000006 /* CaddyOverlayView.swift */,
+				CADD00000000000000000101 /* GSProTheme.swift */,
 				CADD00000000000000000008 /* gspro-bindings.json */,
 			);
 			path = CaddyOverlay;
@@ -909,6 +912,7 @@
 				CADD00000000000000000003 /* CaddyConfig.swift in Sources */,
 				CADD00000000000000000005 /* CaddyKeySender.swift in Sources */,
 				CADD00000000000000000007 /* CaddyOverlayView.swift in Sources */,
+				CADD00000000000000000102 /* GSProTheme.swift in Sources */,
 				FB290D0719B2C406004C83CF /* Limelight.xcdatamodeld in Sources */,
 				9819CC22254F180F008A7C8E /* AbsoluteTouchHandler.m in Sources */,
 				9819CC14254F107A008A7C8E /* RelativeTouchHandler.m in Sources */,

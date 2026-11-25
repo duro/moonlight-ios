@@ -342,9 +342,9 @@ final class CaddyOverlayView: UIView {
 
 enum CaddyTheme {
     // TouchCaddy-style navy keys on a near-black panel.
-    static let panelBackground = UIColor(red: 0.07, green: 0.07, blue: 0.08, alpha: 0.94)
+    static let panelBackground = GSProTheme.background.withAlphaComponent(0.94)
     static let key = UIColor(red: 0.14, green: 0.27, blue: 0.41, alpha: 1)          // #24466A
-    static let keyPressed = UIColor(red: 0.22, green: 0.40, blue: 0.60, alpha: 1)
+    static let keyPressed = GSProTheme.accent
     static let keyBorder = UIColor(red: 0.20, green: 0.34, blue: 0.50, alpha: 1)
 }
 
