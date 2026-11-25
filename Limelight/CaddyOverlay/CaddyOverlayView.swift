@@ -16,7 +16,7 @@ final class CaddyOverlayView: UIView {
     // Panel geometry, modelled on TouchCaddy's Home screen (portrait grid, 12 columns).
     private let panelWidth: CGFloat = 380
     private let rowHeight: CGFloat = 72       // >= 60 pt thumb target
-    private let minRowHeight: CGFloat = 56    // shrink to this on short screens
+    private let minRowHeight: CGFloat = 40    // floor for short screens (iPhone landscape)
     private let buttonSpacing: CGFloat = 6
     private let panelPadding: CGFloat = 8
     private let positionKey = "CaddyTriggerPosition"
@@ -299,8 +299,11 @@ final class CaddyOverlayView: UIView {
 
         // Fit the panel's height to the screen, shrinking rows down to minRowHeight if needed.
         let chrome = 2 * panelPadding + (rowCount - 1) * buttonSpacing
+        // iPads fit at full size; on an iPhone in landscape the rows shrink so all 7 fit on screen.
         let rowH = max(minRowHeight, min(rowHeight, (r.height - chrome) / rowCount))
-        let s = CGSize(width: min(panelWidth, r.width), height: chrome + rowCount * rowH)
+        // Keep keys roughly in proportion when rows shrink, so they don't turn into thin strips.
+        let width = panelWidth * max(rowH / rowHeight, 0.8)
+        let s = CGSize(width: min(width, r.width), height: chrome + rowCount * rowH)
 
         let t = trigger.frame
         var origin: CGPoint
