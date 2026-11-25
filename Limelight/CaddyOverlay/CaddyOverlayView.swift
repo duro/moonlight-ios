@@ -354,6 +354,8 @@ enum CaddyTheme {
 final class CaddyKeyButton: UIControl {
     let button: CaddyButton
     private let stack = UIStackView()
+    private var iconPart: UIImageView?
+    private var textPart: UILabel?
     private var repeatTimer: Timer?
     private var holding = false
     private var pressing = false
@@ -399,10 +401,13 @@ final class CaddyKeyButton: UIControl {
             l.font = .systemFont(ofSize: 17, weight: .medium)
             l.textAlignment = .center
             l.numberOfLines = 2
+            l.lineBreakMode = .byWordWrapping
             l.adjustsFontSizeToFitWidth = true
             l.minimumScaleFactor = 0.6
             return l
         }()
+        if button.display != "text" { iconPart = iconView }
+        if button.display != "icon" { textPart = textView }
 
         switch button.display {
         case "icon":     stack.addArrangedSubview(iconView)
@@ -420,6 +425,17 @@ final class CaddyKeyButton: UIControl {
     override func layoutSubviews() {
         super.layoutSubviews()
         let maxW = bounds.width - 12
+
+        // Text + icon keys (e.g. "Club Up +"): on narrow keys (iPhone) the icon would squeeze the
+        // text into fragments, so drop the icon whenever the longest word can't sit beside it.
+        if let icon = iconPart, let text = textPart {
+            let font = text.font ?? .systemFont(ofSize: 17, weight: .medium)
+            let longestWord = (text.text ?? "").split(separator: " ")
+                .map { (String($0) as NSString).size(withAttributes: [.font: font]).width }
+                .max() ?? 0
+            let iconW = icon.intrinsicContentSize.width
+            icon.isHidden = longestWord + stack.spacing + iconW > maxW
+        }
         let fit = stack.systemLayoutSizeFitting(CGSize(width: maxW, height: bounds.height),
                                                 withHorizontalFittingPriority: .defaultLow,
                                                 verticalFittingPriority: .fittingSizeLevel)
